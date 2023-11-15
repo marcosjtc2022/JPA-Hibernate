@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import br.com.alura.loja.dao.CategoriaDao;
 import br.com.alura.loja.dao.ProdutoDao;
 import br.com.alura.loja.modelo.Categoria;
+import br.com.alura.loja.modelo.CategoriaId;
 import br.com.alura.loja.modelo.Produto;
 import br.com.alura.loja.util.JPAUtil;
 
@@ -28,9 +29,9 @@ public class CadastroDeProduto {
 	        List<Produto> todos2 = produtoDao.buscarPorNome("Xiaomi Redmi");
 	        todos2.forEach(p2 -> System.out.println(p2.getNome()));
 	        
-	        List<Produto> todos3 = produtoDao.buscarPorNomeDaCategoria("CELULARES");
-	        todos3.forEach(p2 -> System.out.println(p2.getNome()));
-	        
+//	        List<Produto> todos3 = produtoDao.buscarPorNomeDaCategoria("CELULARES");
+//	        todos3.forEach(p2 -> System.out.println(p2.getNome()));
+//	        
 	        BigDecimal precoDoProduto = produtoDao.buscarPrecoDoProdutoComNome("Xiaomi Redmi");
 	       	System.out.println(precoDoProduto);
     }
@@ -48,6 +49,11 @@ public class CadastroDeProduto {
 		categoriaDao.cadastrar(celulares);
 		produtoDao.cadastrar(celular);
 		em.getTransaction().commit();
+		
+		//Pesquisa com chave composta.
+		Categoria categoria = em.find(Categoria.class, new CategoriaId("CELULARES", "xpto"));
+		System.out.println(" Pesquisa chave composta = " + categoria.getNome());
+		
 		em.close();
 	}
 

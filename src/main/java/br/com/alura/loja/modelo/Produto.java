@@ -4,14 +4,23 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "produtos")
+//Cria uma tabela produto simples com as classes Livro e informática.
+//DTYPE varchar(31) not null. Hibernate cria uma coluna,
+//com o nome Livro e Informática.
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//Cria uma tabela produto e as tabelas Livro e informática com os relacionamentos.
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Produto {
 	
 	@Id
@@ -23,7 +32,8 @@ public class Produto {
 	private LocalDate dataCadastro = LocalDate.now();
 	
 	//@Enumerated(EnumType.STRING) //Para que ao ser persistido insira o nome da constante.
-	@ManyToOne
+	//É uma boa prática colocar lazy em todo o relacionamento toOne.
+	@ManyToOne(fetch = FetchType.LAZY) 
     private Categoria categoria;
     
 	public Produto() {

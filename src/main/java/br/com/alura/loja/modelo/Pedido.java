@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,6 +23,7 @@ public class Pedido {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	//Força jpa colocar separador underline.
 	@Column(name = "valor_total")
 	private BigDecimal valorTotal = BigDecimal.ZERO;
 	private LocalDate data = LocalDate.now();
@@ -34,9 +36,13 @@ public class Pedido {
 	//se fizer referência.
 	//É uma boa prática colocar lazy em todo o relacionamento
 	//toOne.
-	@ManyToOne 
+	@ManyToOne(fetch = FetchType.LAZY) 
 	private Cliente cliente;
 	
+	//Relacionamento ToMany o padrão é lazy.
+	//mappedBy informa ao JPA que o relacionamento é bidirecional.
+	//itens = new ArrayList<>(); inicializa uma lista (vazia). Isso evita if´s no código.
+	//cascade = CascadeType.ALL tudo o que for feito para pedido será feito em itemPedido.
 	//Objetos não carregados automaticamente.
 	//Carregado somente se fizer acesso à lista.
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
@@ -49,6 +55,8 @@ public class Pedido {
 		this.cliente = cliente;
 	}
 	
+	//Método para adicionar itens.
+	//Relacionando item e pedido.
 	public void adicionarItem(ItemPedido item) {
 		item.setPedido(this);
 		this.itens.add(item);
